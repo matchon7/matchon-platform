@@ -1,4 +1,4 @@
-name: Deploy MATCHON Platform
+name: MATCHON 플랫폼 배포
 
 on:
   push:
@@ -13,7 +13,7 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -27,17 +27,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
 
       - name: Install dependencies
-        working-directory: ./matchon-platform-complete
-        run: npm install
-
-      - name: Copy CNAME
-        working-directory: ./matchon-platform-complete
-        run: cp CNAME public/CNAME
+        run: npm ci
 
       - name: Build Vite
-        working-directory: ./matchon-platform-complete
         run: npm run build
 
       - name: Setup Pages
@@ -46,7 +41,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./matchon-platform-complete/dist
+          path: ./dist
 
   deploy:
     environment:
