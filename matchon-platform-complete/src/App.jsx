@@ -1,16 +1,539 @@
-import React,{useState}from"react";import ByeolGuksu from"./pages/ByeolGuksu";
-const CONSULTATION_ENDPOINT="";
-const EMAIL="matchon7@daum.net";
-const brands=[["01","별국수","BYEOL GUKSU","K-누들 중심의 유연한 외식 프랜차이즈","/byeolguksu/"],["02","별스트리트","BYEOL STREET","국수와 한국식 스트리트푸드 복합 모델","/byeolguksu/#brands"],["03","별그릴","BYEOL GRILL","한국식 BBQ·식사·모임형 외식 모델","/byeolguksu/#brands"],["04","그로타피맥","GROTTA PIMAC","피자·맥주를 기반으로 확장하는 외식 브랜드","#contact"]];
-const scroll=id=>document.getElementById(id)?.scrollIntoView({behavior:"smooth"});
-function Home(){const[open,setOpen]=useState(false),[sent,setSent]=useState(false),[sending,setSending]=useState(false);
-async function submit(e){e.preventDefault();const f=e.currentTarget,d=Object.fromEntries(new FormData(f).entries());if(!d.name||!d.phone||!d.region)return alert("성명, 연락처, 희망지역을 입력해주세요.");setSending(true);const p={type:"MATCHON_MAIN",submittedAt:new Date().toISOString(),...d};try{if(CONSULTATION_ENDPOINT)await fetch(CONSULTATION_ENDPOINT,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:new URLSearchParams({payload:JSON.stringify(p)})});else localStorage.setItem("matchon_last_inquiry",JSON.stringify(p));f.reset();setSent(true)}catch(err){alert("상담 신청 중 오류가 발생했습니다.")}finally{setSending(false)}}
-return <div className="site"><header className="top"><a className="logo" href="/"><b>M</b><span>매치온<small>MATCHON · FRANCHISE & PARTNERSHIP</small></span></a><button className="hamb" onClick={()=>setOpen(!open)}>☰</button><nav className={open?"nav open":"nav"}>{[["company","회사소개"],["business","사업영역"],["brands","브랜드"]].map(x=><a key={x[0]} href={"#"+x[0]} onClick={e=>{e.preventDefault();scroll(x[0]);setOpen(false)}}>{x[1]}</a>)}<a href="/byeolguksu/">별국수</a><button onClick={()=>scroll("contact")}>상담신청</button></nav></header>
-<section className="hero"><div><p className="eyebrow">MATCHON PLATFORM · 2026</p><h1>브랜드와 사람,<br/><em>기회를 연결합니다.</em></h1><p>매치온은 외식 프랜차이즈와 파트너십을 연결하고 브랜드별 상권·운영·창업 모델을 현실적으로 설계하는 프랜차이즈 플랫폼입니다.</p><div><button className="red" onClick={()=>scroll("brands")}>브랜드 보기</button><button className="white" onClick={()=>scroll("contact")}>사업 상담</button></div></div><div className="heroBox"><span>01 / MATCHON</span><strong>MATCH<br/><i>ON</i></strong><small>FRANCHISE · PARTNERSHIP · GROWTH</small></div></section>
-<section id="company" className="section"><p className="eyebrow">ABOUT MATCHON</p><h2>좋은 브랜드를<br/>좋은 기회로 연결합니다.</h2><div className="cards">{[["브랜드 운영","외식 브랜드의 메뉴, 매장, 물류, 마케팅과 운영 체계를 연결합니다."],["프랜차이즈 매칭","예비 창업자와 브랜드의 조건을 맞춰 상권과 투자범위에 적합한 모델을 제안합니다."],["파트너십","본사·가맹점·공급·시공·마케팅 파트너가 효율적으로 협업하도록 연결합니다."]].map((x,i)=><article key={x[0]}><b>0{i+1}</b><h3>{x[0]}</h3><p>{x[1]}</p></article>)}</div></section>
-<section id="business" className="section dark"><p className="eyebrow">BUSINESS</p><h2>매치온이 연결하는<br/>사업의 네 가지 축</h2><div className="four">{["프랜차이즈 사업","브랜드 운영","파트너십","사업 확장"].map((x,i)=><article key={x}><b>0{i+1}</b><h3>{x}</h3><p>{["브랜드 발굴부터 가맹점 모집과 개점지원까지.","메뉴·원가·운영·마케팅을 브랜드별로 체계화.","물류·인테리어·설비·마케팅 등 실무 파트너 연결.","국내 상권부터 특수상권·해외까지 단계적 확장 설계."][i]}</p></article>)}</div></section>
-<section id="brands" className="section"><p className="eyebrow">BRAND PORTFOLIO</p><h2>매치온과 함께<br/>성장하는 브랜드</h2><div className="brandgrid">{brands.map(b=><article key={b[0]}><b>{b[0]}</b><small>{b[2]}</small><h3>{b[1]}</h3><p>{b[3]}</p><a href={b[4]}>자세히 보기 →</a></article>)}</div></section>
-<section className="section cream"><div className="split"><div><p className="eyebrow">BYEOL GUKSU</p><h2>별국수,<br/>매치온의 K-누들 프랜차이즈</h2><p>국수를 중심으로 밥·분식·돈가스 등을 상권에 맞춰 선택적으로 구성하는 유연한 K-푸드 브랜드입니다.</p><a className="link" href="/byeolguksu/">별국수 홈페이지 보기 →</a></div><div className="list">{["상권 맞춤형 운영","메뉴 구성 & 운영 설계","교육·물류·마케팅 지원","15평 표준점 투자안내","창업상담 및 점포 검토"].map((x,i)=><div key={x}><b>0{i+1}</b>{x}</div>)}</div></div></section>
-<section id="contact" className="section contact"><div><p className="eyebrow">CONTACT MATCHON</p><h2>사업의 다음 단계를<br/>함께 설계해보세요.</h2><p>브랜드, 창업, 상권, 파트너십 상담 내용을 남겨주시면 확인 후 연락드리겠습니다.</p><strong>{EMAIL}</strong><p>평일 09:00 ~ 18:00</p></div><form onSubmit={submit}><label>성명 / 업체명 *<input name="name" required/></label><label>연락처 *<input name="phone" required/></label><label>희망 지역 *<input name="region" required/></label><label>관심 브랜드<select name="brand"><option>별국수</option><option>별스트리트</option><option>별그릴</option><option>그로타피맥</option><option>기타</option></select></label><label>예상 투자범위<input name="budget"/></label><label>문의내용<textarea name="message" rows="5"/></label><label className="check"><input type="checkbox" required/> 개인정보 수집·이용에 동의합니다.</label><button className="red full" disabled={sending}>{sending?"접수 중...":"상담 신청하기"}</button>{sent&&<p className="ok">상담 신청이 접수되었습니다. 담당자가 확인 후 연락드리겠습니다.</p>}</form></div></section>
-<footer><b>매치온 MATCHON</b><span>FRANCHISE · PARTNERSHIP · GROWTH</span><p>상담 : {EMAIL} · 평일 09:00 ~ 18:00</p><p>© 2026 MATCHON. All Rights Reserved.</p></footer></div>}
-export default function App(){return window.location.pathname.replace(/\/+$/,"")==="/byeolguksu"?<ByeolGuksu consultationEndpoint={CONSULTATION_ENDPOINT}/>:<Home/>}
+import React, { useState } from "react";
+import ByeolGuksu from "./pages/ByeolGuksu";
+
+const CONSULTATION_ENDPOINT = "";
+
+const EMAIL = "matchon7@daum.net";
+
+const brands = [
+  {
+    no: "01",
+    name: "별국수",
+    en: "BYEOL GUKSU",
+    desc: "K-누들 중심의 유연한 외식 프랜차이즈",
+    link: "/byeolguksu/",
+  },
+  {
+    no: "02",
+    name: "별스트리트",
+    en: "BYEOL STREET",
+    desc: "국수와 한국식 스트리트푸드 복합 모델",
+    link: "/byeolguksu/#brands",
+  },
+  {
+    no: "03",
+    name: "별그릴",
+    en: "BYEOL GRILL",
+    desc: "한국식 BBQ·식사·모임형 외식 모델",
+    link: "/byeolguksu/#brands",
+  },
+  {
+    no: "04",
+    name: "그로타피맥",
+    en: "GROTTA PIMAC",
+    desc: "피자·맥주를 기반으로 확장하는 외식 브랜드",
+    link: "#contact",
+  },
+];
+
+function scrollToSection(id) {
+  document.getElementById(id)?.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
+}
+
+function Home() {
+  const [open, setOpen] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+
+  async function submit(e) {
+    e.preventDefault();
+
+    const form = e.currentTarget;
+    const data = Object.fromEntries(new FormData(form).entries());
+
+    if (!data.name || !data.phone || !data.region) {
+      alert("성명, 연락처, 희망지역을 입력해주세요.");
+      return;
+    }
+
+    setSending(true);
+
+    const payload = {
+      type: "MATCHON_MAIN",
+      submittedAt: new Date().toISOString(),
+      ...data,
+    };
+
+    try {
+      if (CONSULTATION_ENDPOINT) {
+        await fetch(CONSULTATION_ENDPOINT, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type":
+              "application/x-www-form-urlencoded;charset=UTF-8",
+          },
+          body: new URLSearchParams({
+            payload: JSON.stringify(payload),
+          }),
+        });
+      } else {
+        localStorage.setItem(
+          "matchon_last_inquiry",
+          JSON.stringify(payload)
+        );
+      }
+
+      form.reset();
+      setSent(true);
+    } catch (error) {
+      console.error(error);
+      alert("상담 신청 중 오류가 발생했습니다.");
+    } finally {
+      setSending(false);
+    }
+  }
+
+  function closeMenu() {
+    setOpen(false);
+  }
+
+  return (
+    <div className="matchon">
+      <header className="site-header">
+        <div className="header-inner">
+          <a href="/" className="logo">
+            <span className="logo-mark">M</span>
+
+            <span className="logo-text">
+              <strong>매치온</strong>
+              <small>MATCHON</small>
+            </span>
+          </a>
+
+          <button
+            type="button"
+            className="hamb"
+            aria-label="메뉴 열기"
+            onClick={() => setOpen(!open)}
+          >
+            ☰
+          </button>
+
+          <nav className={open ? "nav open" : "nav"}>
+            <a
+              href="#company"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection("company");
+                closeMenu();
+              }}
+            >
+              회사소개
+            </a>
+
+            <a
+              href="#business"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection("business");
+                closeMenu();
+              }}
+            >
+              사업영역
+            </a>
+
+            <a
+              href="#brands"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection("brands");
+                closeMenu();
+              }}
+            >
+              브랜드
+            </a>
+
+            <a
+              href="/byeolguksu/"
+              onClick={closeMenu}
+            >
+              별국수
+            </a>
+
+            <button
+              type="button"
+              className="nav-contact"
+              onClick={() => {
+                scrollToSection("contact");
+                closeMenu();
+              }}
+            >
+              상담신청
+            </button>
+          </nav>
+        </div>
+      </header>
+
+      <main>
+        {/* HERO */}
+        <section className="hero">
+          <div className="hero-inner">
+            <div className="hero-copy">
+              <p className="eyebrow">
+                MATCHON · FRANCHISE & PARTNERSHIP
+              </p>
+
+              <h1>
+                브랜드와 사람을 연결하고,
+                <br />
+                <em>성장의 기회를 만듭니다.</em>
+              </h1>
+
+              <p className="hero-description">
+                매치온은 외식 프랜차이즈 브랜드의 발굴·개발·운영과
+                가맹점주 및 파트너 매칭을 함께 고민하는
+                프랜차이즈 플랫폼입니다.
+              </p>
+
+              <div className="hero-buttons">
+                <button
+                  type="button"
+                  className="red"
+                  onClick={() => scrollToSection("brands")}
+                >
+                  브랜드 살펴보기 ↗
+                </button>
+
+                <button
+                  type="button"
+                  className="outline"
+                  onClick={() => scrollToSection("contact")}
+                >
+                  창업 상담하기
+                </button>
+              </div>
+            </div>
+
+            <div className="hero-visual">
+              <div className="hero-card">
+                <span>M</span>
+                <strong>MATCH</strong>
+                <small>ON</small>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* COMPANY */}
+        <section id="company" className="section">
+          <div className="section-inner">
+            <p className="eyebrow">ABOUT MATCHON</p>
+
+            <h2>
+              좋은 브랜드와
+              <br />
+              좋은 파트너를 연결합니다.
+            </h2>
+
+            <p className="section-lead">
+              매치온은 단순히 가맹점을 모집하는 회사를 넘어
+              브랜드와 가맹점주가 함께 성장할 수 있는 구조를
+              만드는 것을 목표로 합니다.
+            </p>
+
+            <div className="three-grid">
+              <article>
+                <b>01</b>
+                <h3>브랜드 개발</h3>
+                <p>
+                  외식시장과 고객의 변화에 맞춰 새로운 브랜드와
+                  사업모델을 개발합니다.
+                </p>
+              </article>
+
+              <article>
+                <b>02</b>
+                <h3>가맹점 매칭</h3>
+                <p>
+                  예비창업자의 투자규모와 희망지역을 분석하여
+                  적합한 브랜드와 연결합니다.
+                </p>
+              </article>
+
+              <article>
+                <b>03</b>
+                <h3>운영 파트너십</h3>
+                <p>
+                  오픈 이후에도 물류·마케팅·운영 시스템을
+                  통해 지속적인 성장을 지원합니다.
+                </p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        {/* BUSINESS */}
+        <section id="business" className="section cream">
+          <div className="section-inner">
+            <p className="eyebrow">BUSINESS</p>
+
+            <h2>
+              매칭에서 시작해
+              <br />
+              운영까지 연결합니다.
+            </h2>
+
+            <div className="business-grid">
+              <article>
+                <span>01</span>
+                <h3>프랜차이즈 사업</h3>
+                <p>
+                  외식 브랜드의 가맹사업 기획과 운영,
+                  가맹점 모집을 지원합니다.
+                </p>
+              </article>
+
+              <article>
+                <span>02</span>
+                <h3>브랜드 파트너십</h3>
+                <p>
+                  브랜드와 사업자 사이의 협력 기회를
+                  발굴하고 연결합니다.
+                </p>
+              </article>
+
+              <article>
+                <span>03</span>
+                <h3>상권 맞춤형 모델</h3>
+                <p>
+                  상권과 점포 조건에 따라 메뉴와
+                  운영모델을 유연하게 설계합니다.
+                </p>
+              </article>
+
+              <article>
+                <span>04</span>
+                <h3>창업 컨설팅</h3>
+                <p>
+                  투자금액과 희망지역을 기준으로
+                  적합한 창업모델을 함께 검토합니다.
+                </p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        {/* BRANDS */}
+        <section id="brands" className="dark-section">
+          <div className="section-inner">
+            <p className="eyebrow">BRAND PORTFOLIO</p>
+
+            <h2>
+              매치온이 함께 만드는
+              <br />
+              외식 브랜드
+            </h2>
+
+            <div className="brand-grid">
+              {brands.map((brand) => (
+                <article className="brand-card" key={brand.no}>
+                  <span>{brand.no}</span>
+
+                  <h3>{brand.name}</h3>
+
+                  <small>{brand.en}</small>
+
+                  <p>{brand.desc}</p>
+
+                  <a href={brand.link}>
+                    자세히 보기 →
+                  </a>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* BYEOL GUKSU */}
+        <section className="featured-brand">
+          <div className="section-inner">
+            <div>
+              <p className="eyebrow">
+                FEATURED BRAND · K-NOODLE
+              </p>
+
+              <h2>
+                상권에 맞추고,
+                <br />
+                매장에 맞춰 성장하는
+                <br />
+                <em>별국수</em>
+              </h2>
+
+              <p>
+                국수를 중심으로 밥·분식·돈가스 등을
+                선택적으로 구성하는 유연한 K-누들
+                프랜차이즈 모델입니다.
+              </p>
+
+              <a href="/byeolguksu/" className="red-link">
+                별국수 홈페이지 보기 →
+              </a>
+            </div>
+
+            <div className="featured-star">
+              ★
+            </div>
+          </div>
+        </section>
+
+        {/* CONTACT */}
+        <section id="contact" className="contact-section">
+          <div className="contact-inner">
+            <div className="contact-copy">
+              <p className="eyebrow">
+                FRANCHISE & PARTNERSHIP
+              </p>
+
+              <h2>
+                새로운 사업의
+                <br />
+                가능성을 함께 찾아보세요.
+              </h2>
+
+              <p>
+                관심 브랜드와 희망 지역,
+                투자 가능 범위를 알려주시면
+                매치온에서 검토 후 연락드리겠습니다.
+              </p>
+
+              <strong>{EMAIL}</strong>
+            </div>
+
+            <form onSubmit={submit} className="contact-form">
+              <label>
+                관심 브랜드
+                <select name="brand">
+                  <option>별국수</option>
+                  <option>별스트리트</option>
+                  <option>별그릴</option>
+                  <option>그로타피맥</option>
+                  <option>기타 상담</option>
+                </select>
+              </label>
+
+              <label>
+                성명 / 업체명 *
+                <input
+                  name="name"
+                  type="text"
+                  required
+                  placeholder="성명 또는 업체명을 입력해주세요"
+                />
+              </label>
+
+              <label>
+                연락처 *
+                <input
+                  name="phone"
+                  type="tel"
+                  required
+                  placeholder="연락 가능한 전화번호"
+                />
+              </label>
+
+              <label>
+                희망 출점지역 *
+                <input
+                  name="region"
+                  type="text"
+                  required
+                  placeholder="예: 서울 강남구"
+                />
+              </label>
+
+              <label>
+                투자 가능 범위
+                <select name="budget">
+                  <option>5,000만원 이하</option>
+                  <option>5,000~7,000만원</option>
+                  <option>7,000만원~1억원</option>
+                  <option>1억원 이상</option>
+                  <option>상담 필요</option>
+                </select>
+              </label>
+
+              <label>
+                문의내용
+                <textarea
+                  name="message"
+                  rows="5"
+                  placeholder="문의하실 내용을 입력해주세요"
+                />
+              </label>
+
+              <label className="privacy-check">
+                <input
+                  type="checkbox"
+                  required
+                />
+                가맹상담을 위한 개인정보 수집·이용에
+                동의합니다.
+              </label>
+
+              <button
+                type="submit"
+                className="red"
+                disabled={sending}
+              >
+                {sending
+                  ? "접수 중..."
+                  : "상담 신청하기"}
+              </button>
+
+              {sent && (
+                <p className="success-message">
+                  상담 신청이 접수되었습니다.
+                </p>
+              )}
+            </form>
+          </div>
+        </section>
+      </main>
+
+      <footer className="footer">
+        <div>
+          <strong>매치온</strong>
+          <span>
+            MATCHON · FRANCHISE & PARTNERSHIP
+          </span>
+        </div>
+
+        <p>
+          © 2026 MATCHON. All Rights Reserved.
+        </p>
+      </footer>
+    </div>
+  );
+}
+
+export default function App() {
+  const path = window.location.pathname;
+
+  if (
+    path === "/byeolguksu" ||
+    path === "/byeolguksu/"
+  ) {
+    return (
+      <ByeolGuksu
+        consultationEndpoint={CONSULTATION_ENDPOINT}
+      />
+    );
+  }
+
+  return <Home />;
+}
