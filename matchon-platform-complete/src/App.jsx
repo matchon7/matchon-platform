@@ -1,9 +1,21 @@
 import React, { useState } from "react";
 import ByeolGuksu from "./pages/ByeolGuksu";
 
-const CONSULTATION_ENDPOINT = "";
+/* =========================================================
+   MATCHON
+   Franchise & Partnership Platform
+   ========================================================= */
 
+const CONSULTATION_ENDPOINT = "";
 const EMAIL = "matchon7@daum.net";
+
+/*
+  GitHub Pages /matchon-platform/ 환경에서도
+  링크가 깨지지 않도록 Vite BASE_URL을 사용합니다.
+*/
+const BASE_URL = import.meta.env.BASE_URL || "/";
+
+const BYEOL_GUKSU_URL = `${BASE_URL}byeolguksu/`;
 
 const brands = [
   {
@@ -11,21 +23,22 @@ const brands = [
     name: "별국수",
     en: "BYEOL GUKSU",
     desc: "K-누들 중심의 유연한 외식 프랜차이즈",
-    link: "/byeolguksu/",
+    link: BYEOL_GUKSU_URL,
+    featured: true,
   },
   {
     no: "02",
     name: "별스트리트",
     en: "BYEOL STREET",
     desc: "국수와 한국식 스트리트푸드 복합 모델",
-    link: "/byeolguksu/#brands",
+    link: `${BYEOL_GUKSU_URL}#brands`,
   },
   {
     no: "03",
     name: "별그릴",
     en: "BYEOL GRILL",
     desc: "한국식 BBQ·식사·모임형 외식 모델",
-    link: "/byeolguksu/#brands",
+    link: `${BYEOL_GUKSU_URL}#brands`,
   },
   {
     no: "04",
@@ -36,30 +49,61 @@ const brands = [
   },
 ];
 
+/* =========================================================
+   공통 섹션 이동
+   ========================================================= */
+
 function scrollToSection(id) {
-  document.getElementById(id)?.scrollIntoView({
+  const target = document.getElementById(id);
+
+  if (!target) return;
+
+  target.scrollIntoView({
     behavior: "smooth",
     block: "start",
   });
 }
+
+/* =========================================================
+   HOME
+   ========================================================= */
 
 function Home() {
   const [open, setOpen] = useState(false);
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
 
+  /* -------------------------------------------------------
+     모바일 메뉴 닫기
+     ------------------------------------------------------- */
+
+  function closeMenu() {
+    setOpen(false);
+  }
+
+  /* -------------------------------------------------------
+     상담 신청
+     ------------------------------------------------------- */
+
   async function submit(e) {
     e.preventDefault();
 
     const form = e.currentTarget;
-    const data = Object.fromEntries(new FormData(form).entries());
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
 
     if (!data.name || !data.phone || !data.region) {
-      alert("성명, 연락처, 희망지역을 입력해주세요.");
+      alert("성명/업체명, 연락처, 희망 출점지역을 입력해주세요.");
+      return;
+    }
+
+    if (!data.privacy) {
+      alert("개인정보 수집·이용에 동의해주세요.");
       return;
     }
 
     setSending(true);
+    setSent(false);
 
     const payload = {
       type: "MATCHON_MAIN",
@@ -68,6 +112,10 @@ function Home() {
     };
 
     try {
+      /*
+        실제 상담 접수 서버가 연결되어 있으면
+        CONSULTATION_ENDPOINT에 주소를 넣습니다.
+      */
       if (CONSULTATION_ENDPOINT) {
         await fetch(CONSULTATION_ENDPOINT, {
           method: "POST",
@@ -81,6 +129,10 @@ function Home() {
           }),
         });
       } else {
+        /*
+          현재는 서버가 연결되어 있지 않으므로
+          브라우저에 마지막 상담 내용을 임시 저장합니다.
+        */
         localStorage.setItem(
           "matchon_last_inquiry",
           JSON.stringify(payload)
@@ -90,23 +142,45 @@ function Home() {
       form.reset();
       setSent(true);
     } catch (error) {
-      console.error(error);
-      alert("상담 신청 중 오류가 발생했습니다.");
+      console.error("MATCHON consultation error:", error);
+
+      alert(
+        "상담 신청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+      );
     } finally {
       setSending(false);
     }
   }
 
-  function closeMenu() {
-    setOpen(false);
+  /* -------------------------------------------------------
+     네비게이션
+     ------------------------------------------------------- */
+
+  function handleSectionNavigation(e, id) {
+    e.preventDefault();
+    scrollToSection(id);
+    closeMenu();
   }
 
   return (
     <div className="matchon">
+
+      {/* ===================================================
+          HEADER
+          =================================================== */}
+
       <header className="site-header">
         <div className="header-inner">
-          <a href="/" className="logo">
-            <span className="logo-mark">M</span>
+
+          <a
+            href={BASE_URL}
+            className="logo"
+            aria-label="매치온 홈페이지"
+            onClick={closeMenu}
+          >
+            <span className="logo-mark">
+              M
+            </span>
 
             <span className="logo-text">
               <strong>매치온</strong>
@@ -117,48 +191,47 @@ function Home() {
           <button
             type="button"
             className="hamb"
-            aria-label="메뉴 열기"
-            onClick={() => setOpen(!open)}
+            aria-label={open ? "메뉴 닫기" : "메뉴 열기"}
+            aria-expanded={open}
+            onClick={() => setOpen((prev) => !prev)}
           >
-            ☰
+            {open ? "×" : "☰"}
           </button>
 
-          <nav className={open ? "nav open" : "nav"}>
+          <nav
+            className={open ? "nav open" : "nav"}
+            aria-label="주요 메뉴"
+          >
+
             <a
               href="#company"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection("company");
-                closeMenu();
-              }}
+              onClick={(e) =>
+                handleSectionNavigation(e, "company")
+              }
             >
               회사소개
             </a>
 
             <a
               href="#business"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection("business");
-                closeMenu();
-              }}
+              onClick={(e) =>
+                handleSectionNavigation(e, "business")
+              }
             >
               사업영역
             </a>
 
             <a
               href="#brands"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection("brands");
-                closeMenu();
-              }}
+              onClick={(e) =>
+                handleSectionNavigation(e, "brands")
+              }
             >
               브랜드
             </a>
 
             <a
-              href="/byeolguksu/"
+              href={BYEOL_GUKSU_URL}
               onClick={closeMenu}
             >
               별국수
@@ -174,15 +247,26 @@ function Home() {
             >
               상담신청
             </button>
+
           </nav>
         </div>
       </header>
 
+      {/* ===================================================
+          MAIN
+          =================================================== */}
+
       <main>
-        {/* HERO */}
+
+        {/* =================================================
+            HERO
+            ================================================= */}
+
         <section className="hero">
           <div className="hero-inner">
+
             <div className="hero-copy">
+
               <p className="eyebrow">
                 MATCHON · FRANCHISE & PARTNERSHIP
               </p>
@@ -194,16 +278,21 @@ function Home() {
               </h1>
 
               <p className="hero-description">
-                매치온은 외식 프랜차이즈 브랜드의 발굴·개발·운영과
-                가맹점주 및 파트너 매칭을 함께 고민하는
-                프랜차이즈 플랫폼입니다.
+                매치온은 외식 프랜차이즈 브랜드의
+                발굴·개발·운영과 가맹점주 및 파트너
+                매칭을 함께 고민하는 프랜차이즈
+                플랫폼입니다.
               </p>
 
               <div className="hero-buttons">
+
                 <button
                   type="button"
                   className="red"
-                  onClick={() => scrollToSection("brands")}
+                  onClick={() => {
+                    scrollToSection("brands");
+                    closeMenu();
+                  }}
                 >
                   브랜드 살펴보기 ↗
                 </button>
@@ -211,27 +300,52 @@ function Home() {
                 <button
                   type="button"
                   className="outline"
-                  onClick={() => scrollToSection("contact")}
+                  onClick={() => {
+                    scrollToSection("contact");
+                    closeMenu();
+                  }}
                 >
                   창업 상담하기
                 </button>
+
               </div>
             </div>
 
-            <div className="hero-visual">
+            <div
+              className="hero-visual"
+              aria-hidden="true"
+            >
               <div className="hero-card">
+
                 <span>M</span>
-                <strong>MATCH</strong>
-                <small>ON</small>
+
+                <strong>
+                  MATCH
+                </strong>
+
+                <small>
+                  ON
+                </small>
+
               </div>
             </div>
+
           </div>
         </section>
 
-        {/* COMPANY */}
-        <section id="company" className="section">
+        {/* =================================================
+            COMPANY
+            ================================================= */}
+
+        <section
+          id="company"
+          className="section company-section"
+        >
           <div className="section-inner">
-            <p className="eyebrow">ABOUT MATCHON</p>
+
+            <p className="eyebrow">
+              ABOUT MATCHON
+            </p>
 
             <h2>
               좋은 브랜드와
@@ -240,46 +354,71 @@ function Home() {
             </h2>
 
             <p className="section-lead">
-              매치온은 단순히 가맹점을 모집하는 회사를 넘어
-              브랜드와 가맹점주가 함께 성장할 수 있는 구조를
-              만드는 것을 목표로 합니다.
+              매치온은 단순히 가맹점을 모집하는 회사를
+              넘어 브랜드와 가맹점주가 함께 성장할 수
+              있는 구조를 만드는 것을 목표로 합니다.
             </p>
 
             <div className="three-grid">
+
               <article>
                 <b>01</b>
-                <h3>브랜드 개발</h3>
+
+                <h3>
+                  브랜드 개발
+                </h3>
+
                 <p>
-                  외식시장과 고객의 변화에 맞춰 새로운 브랜드와
-                  사업모델을 개발합니다.
+                  외식시장과 고객의 변화에 맞춰
+                  새로운 브랜드와 사업모델을
+                  개발합니다.
                 </p>
               </article>
 
               <article>
                 <b>02</b>
-                <h3>가맹점 매칭</h3>
+
+                <h3>
+                  가맹점 매칭
+                </h3>
+
                 <p>
-                  예비창업자의 투자규모와 희망지역을 분석하여
-                  적합한 브랜드와 연결합니다.
+                  예비창업자의 투자규모와 희망지역을
+                  분석하여 적합한 브랜드와 연결합니다.
                 </p>
               </article>
 
               <article>
                 <b>03</b>
-                <h3>운영 파트너십</h3>
+
+                <h3>
+                  운영 파트너십
+                </h3>
+
                 <p>
-                  오픈 이후에도 물류·마케팅·운영 시스템을
-                  통해 지속적인 성장을 지원합니다.
+                  오픈 이후에도 물류·마케팅·운영
+                  시스템을 통해 지속적인 성장을
+                  지원합니다.
                 </p>
               </article>
+
             </div>
           </div>
         </section>
 
-        {/* BUSINESS */}
-        <section id="business" className="section cream">
+        {/* =================================================
+            BUSINESS
+            ================================================= */}
+
+        <section
+          id="business"
+          className="section cream business-section"
+        >
           <div className="section-inner">
-            <p className="eyebrow">BUSINESS</p>
+
+            <p className="eyebrow">
+              BUSINESS
+            </p>
 
             <h2>
               매칭에서 시작해
@@ -288,27 +427,40 @@ function Home() {
             </h2>
 
             <div className="business-grid">
+
               <article>
                 <span>01</span>
-                <h3>프랜차이즈 사업</h3>
+
+                <h3>
+                  프랜차이즈 사업
+                </h3>
+
                 <p>
-                  외식 브랜드의 가맹사업 기획과 운영,
-                  가맹점 모집을 지원합니다.
+                  외식 브랜드의 가맹사업 기획과
+                  운영, 가맹점 모집을 지원합니다.
                 </p>
               </article>
 
               <article>
                 <span>02</span>
-                <h3>브랜드 파트너십</h3>
+
+                <h3>
+                  브랜드 파트너십
+                </h3>
+
                 <p>
-                  브랜드와 사업자 사이의 협력 기회를
-                  발굴하고 연결합니다.
+                  브랜드와 사업자 사이의 협력
+                  기회를 발굴하고 연결합니다.
                 </p>
               </article>
 
               <article>
                 <span>03</span>
-                <h3>상권 맞춤형 모델</h3>
+
+                <h3>
+                  상권 맞춤형 모델
+                </h3>
+
                 <p>
                   상권과 점포 조건에 따라 메뉴와
                   운영모델을 유연하게 설계합니다.
@@ -317,20 +469,34 @@ function Home() {
 
               <article>
                 <span>04</span>
-                <h3>창업 컨설팅</h3>
+
+                <h3>
+                  창업 컨설팅
+                </h3>
+
                 <p>
                   투자금액과 희망지역을 기준으로
                   적합한 창업모델을 함께 검토합니다.
                 </p>
               </article>
+
             </div>
           </div>
         </section>
 
-        {/* BRANDS */}
-        <section id="brands" className="dark-section">
+        {/* =================================================
+            BRAND PORTFOLIO
+            ================================================= */}
+
+        <section
+          id="brands"
+          className="dark-section brand-section"
+        >
           <div className="section-inner">
-            <p className="eyebrow">BRAND PORTFOLIO</p>
+
+            <p className="eyebrow">
+              BRAND PORTFOLIO
+            </p>
 
             <h2>
               매치온이 함께 만드는
@@ -339,29 +505,58 @@ function Home() {
             </h2>
 
             <div className="brand-grid">
+
               {brands.map((brand) => (
-                <article className="brand-card" key={brand.no}>
-                  <span>{brand.no}</span>
+                <article
+                  className={
+                    brand.featured
+                      ? "brand-card featured"
+                      : "brand-card"
+                  }
+                  key={brand.no}
+                >
 
-                  <h3>{brand.name}</h3>
+                  <div className="brand-card-top">
+                    <span>
+                      {brand.no}
+                    </span>
 
-                  <small>{brand.en}</small>
+                    <small>
+                      {brand.en}
+                    </small>
+                  </div>
 
-                  <p>{brand.desc}</p>
+                  <h3>
+                    {brand.name}
+                  </h3>
+
+                  <p>
+                    {brand.desc}
+                  </p>
 
                   <a href={brand.link}>
                     자세히 보기 →
                   </a>
+
                 </article>
               ))}
+
             </div>
           </div>
         </section>
 
-        {/* BYEOL GUKSU */}
-        <section className="featured-brand">
+        {/* =================================================
+            FEATURED BRAND — BYEOL GUKSU
+            ================================================= */}
+
+        <section
+          className="featured-brand"
+          id="byeol-guksu"
+        >
           <div className="section-inner">
-            <div>
+
+            <div className="featured-brand-copy">
+
               <p className="eyebrow">
                 FEATURED BRAND · K-NOODLE
               </p>
@@ -380,21 +575,37 @@ function Home() {
                 프랜차이즈 모델입니다.
               </p>
 
-              <a href="/byeolguksu/" className="red-link">
+              <a
+                href={BYEOL_GUKSU_URL}
+                className="red-link"
+              >
                 별국수 홈페이지 보기 →
               </a>
+
             </div>
 
-            <div className="featured-star">
+            <div
+              className="featured-star"
+              aria-hidden="true"
+            >
               ★
             </div>
+
           </div>
         </section>
 
-        {/* CONTACT */}
-        <section id="contact" className="contact-section">
+        {/* =================================================
+            CONTACT
+            ================================================= */}
+
+        <section
+          id="contact"
+          className="contact-section"
+        >
           <div className="contact-inner">
+
             <div className="contact-copy">
+
               <p className="eyebrow">
                 FRANCHISE & PARTNERSHIP
               </p>
@@ -411,43 +622,81 @@ function Home() {
                 매치온에서 검토 후 연락드리겠습니다.
               </p>
 
-              <strong>{EMAIL}</strong>
+              <a
+                href={`mailto:${EMAIL}`}
+                className="contact-email"
+              >
+                {EMAIL}
+              </a>
+
             </div>
 
-            <form onSubmit={submit} className="contact-form">
+            <form
+              onSubmit={submit}
+              className="contact-form"
+            >
+
               <label>
-                관심 브랜드
+                <span>
+                  관심 브랜드
+                </span>
+
                 <select name="brand">
-                  <option>별국수</option>
-                  <option>별스트리트</option>
-                  <option>별그릴</option>
-                  <option>그로타피맥</option>
-                  <option>기타 상담</option>
+                  <option value="별국수">
+                    별국수
+                  </option>
+
+                  <option value="별스트리트">
+                    별스트리트
+                  </option>
+
+                  <option value="별그릴">
+                    별그릴
+                  </option>
+
+                  <option value="그로타피맥">
+                    그로타피맥
+                  </option>
+
+                  <option value="기타 상담">
+                    기타 상담
+                  </option>
                 </select>
               </label>
 
               <label>
-                성명 / 업체명 *
+                <span>
+                  성명 / 업체명 *
+                </span>
+
                 <input
                   name="name"
                   type="text"
                   required
+                  autoComplete="name"
                   placeholder="성명 또는 업체명을 입력해주세요"
                 />
               </label>
 
               <label>
-                연락처 *
+                <span>
+                  연락처 *
+                </span>
+
                 <input
                   name="phone"
                   type="tel"
                   required
+                  autoComplete="tel"
                   placeholder="연락 가능한 전화번호"
                 />
               </label>
 
               <label>
-                희망 출점지역 *
+                <span>
+                  희망 출점지역 *
+                </span>
+
                 <input
                   name="region"
                   type="text"
@@ -457,18 +706,38 @@ function Home() {
               </label>
 
               <label>
-                투자 가능 범위
+                <span>
+                  투자 가능 범위
+                </span>
+
                 <select name="budget">
-                  <option>5,000만원 이하</option>
-                  <option>5,000~7,000만원</option>
-                  <option>7,000만원~1억원</option>
-                  <option>1억원 이상</option>
-                  <option>상담 필요</option>
+                  <option value="5,000만원 이하">
+                    5,000만원 이하
+                  </option>
+
+                  <option value="5,000~7,000만원">
+                    5,000~7,000만원
+                  </option>
+
+                  <option value="7,000만원~1억원">
+                    7,000만원~1억원
+                  </option>
+
+                  <option value="1억원 이상">
+                    1억원 이상
+                  </option>
+
+                  <option value="상담 필요">
+                    상담 필요
+                  </option>
                 </select>
               </label>
 
               <label>
-                문의내용
+                <span>
+                  문의내용
+                </span>
+
                 <textarea
                   name="message"
                   rows="5"
@@ -477,17 +746,23 @@ function Home() {
               </label>
 
               <label className="privacy-check">
+
                 <input
+                  name="privacy"
                   type="checkbox"
                   required
                 />
-                가맹상담을 위한 개인정보 수집·이용에
-                동의합니다.
+
+                <span>
+                  가맹상담을 위한 개인정보
+                  수집·이용에 동의합니다.
+                </span>
+
               </label>
 
               <button
                 type="submit"
-                className="red"
+                className="red contact-submit"
                 disabled={sending}
               >
                 {sending
@@ -496,38 +771,82 @@ function Home() {
               </button>
 
               {sent && (
-                <p className="success-message">
+                <p
+                  className="success-message"
+                  role="status"
+                >
                   상담 신청이 접수되었습니다.
+                  빠른 시간 내에 연락드리겠습니다.
                 </p>
               )}
+
             </form>
           </div>
         </section>
+
       </main>
 
+      {/* ===================================================
+          FOOTER
+          =================================================== */}
+
       <footer className="footer">
-        <div>
-          <strong>매치온</strong>
-          <span>
-            MATCHON · FRANCHISE & PARTNERSHIP
-          </span>
+
+        <div className="footer-inner">
+
+          <div className="footer-brand">
+
+            <strong>
+              매치온
+            </strong>
+
+            <span>
+              MATCHON · FRANCHISE & PARTNERSHIP
+            </span>
+
+          </div>
+
+          <div className="footer-contact">
+
+            <a href={`mailto:${EMAIL}`}>
+              {EMAIL}
+            </a>
+
+            <p>
+              © 2026 MATCHON. All Rights Reserved.
+            </p>
+
+          </div>
+
         </div>
 
-        <p>
-          © 2026 MATCHON. All Rights Reserved.
-        </p>
       </footer>
+
     </div>
   );
 }
 
-export default function App() {
-  const path = window.location.pathname;
+/* =========================================================
+   APP ROUTER
+   ========================================================= */
 
-  if (
-    path === "/byeolguksu" ||
-    path === "/byeolguksu/"
-  ) {
+export default function App() {
+  const pathname = window.location.pathname;
+
+  /*
+    GitHub Pages:
+    /matchon-platform/byeolguksu/
+    /byeolguksu/
+    두 가지 상황 모두 대응
+  */
+
+  const isByeolGuksu =
+    pathname === "/byeolguksu" ||
+    pathname === "/byeolguksu/" ||
+    pathname.endsWith("/byeolguksu") ||
+    pathname.endsWith("/byeolguksu/");
+
+  if (isByeolGuksu) {
     return (
       <ByeolGuksu
         consultationEndpoint={CONSULTATION_ENDPOINT}
