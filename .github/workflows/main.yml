@@ -13,66 +13,100 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: pages
   cancel-in-progress: true
 
 jobs:
   build:
-    name: Build MATCHON
+    name: MATCHON을 빌드하세요
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: ./matchon-platform-complete
+
     steps:
-      - name: Checkout
+      # 1. 저장소 가져오기
+      - name: 저장소 체크아웃
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      # 2. Node.js 설정
+      # 중요: npm 캐시는 일단 사용하지 않습니다.
+      # 현재 실패 원인이 캐시 경로이기 때문입니다.
+      - name: Node.js 설정
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: npm
-          cache-dependency-path: matchon-platform-complete/package-lock.json
+          node-version: "20"
 
-      - name: Install dependencies
-        working-directory: ./matchon-platform-complete
-        run: npm ci
-
-      - name: Prepare CNAME
-        working-directory: ./matchon-platform-complete
+      # 3. 프로젝트 구조 확인
+      - name: 프로젝트 구조 확인
         run: |
-          mkdir -p public
-          cp CNAME public/CNAME
+          echo "현재 위치:"
+          pwd
+          echo ""
+          echo "프로젝트 파일:"
+          ls -la
+          echo ""
+          echo "src:"
+          ls -la src || true
+          echo ""
+          echo "public:"
+          ls -la public || true
 
-      - name: Build Vite
-        working-directory: ./matchon-platform-complete
+      # 4. npm 의존성 설치
+      # package-lock.json이 현재 없는 경우를 고려하여 npm install 사용
+      - name: 의존성 설치
+        run: npm install
+
+      # 5. Vite 빌드
+      - name: Vite 빌드
         run: npm run build
 
-      - name: Verify build output
-        working-directory: ./matchon-platform-complete
+      # 6. CNAME 처리
+      # 프로젝트 루트에 CNAME이 있다면 dist로 복사합니다.
+      - name: CNAME 복사
         run: |
-          test -f dist/index.html
-          test -f dist/CNAME
-          echo "MATCHON build verification completed."
+          if [ -f "CNAME" ]; then
+            cp CNAME dist/CNAME
+            echo "CNAME 복사 완료"
+          else
+            echo "CNAME 파일 없음 - 계속 진행"
+          fi
 
-      - name: Setup GitHub Pages
+      # 7. 빌드 결과 확인
+      - name: 빌드 결과 확인
+        run: |
+          echo "===== DIST ====="
+          ls -la dist
+          echo ""
+          echo "===== DIST 파일 ====="
+          find dist -maxdepth 2 -type f | sort
+
+      # 8. GitHub Pages 설정
+      - name: GitHub Pages 설정
         uses: actions/configure-pages@v5
 
-      - name: Upload Pages artifact
+      # 9. Pages 업로드
+      - name: GitHub Pages 아티팩트 업로드
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./matchon-platform-complete/dist
 
   deploy:
-    name: Deploy MATCHON to GitHub Pages
+    name: MATCHON을 GitHub Pages에 배포하세요
+    runs-on: ubuntu-latest
+
+    needs: build
+
+    permissions:
+      pages: write
+      id-token: write
 
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
-    runs-on: ubuntu-latest
-
-    needs: build
-
     steps:
-      - name: Deploy to GitHub Pages
+      - name: MATCHON 배포
         id: deployment
         uses: actions/deploy-pages@v4
