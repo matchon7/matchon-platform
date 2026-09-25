@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="매치온 - 프랜차이즈 매칭 & 파트너십. 좋은 브랜드와 좋은 파트너를 연결합니다.">
+<meta name="theme-color" content="#4b1726">
+<title>MATCHON | Franchise Matching & Partnership</title>
+<style>
+:root{--wine:#4b1726;--wine2:#6b2639;--gold:#c7a15a;--ink:#191719;--muted:#706a6c;--paper:#fbf8f3;--white:#fff;--line:#e8e0d8}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,"Noto Sans KR",sans-serif;color:var(--ink);background:var(--paper);line-height:1.65}
+a{color:inherit;text-decoration:none}.wrap{max-width:1180px;margin:auto;padding:0 28px}
+header{position:fixed;z-index:50;top:0;left:0;right:0;background:rgba(251,248,243,.94);backdrop-filter:blur(14px);border-bottom:1px solid rgba(75,23,38,.08)}
+.nav{height:76px;display:flex;align-items:center;justify-content:space-between}.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.06em}.mark{width:40px;height:40px;border:1.5px solid var(--gold);border-radius:12px;position:relative}.mark:before,.mark:after{content:"";position:absolute;height:2px;background:var(--wine);width:23px;left:7px;transform:rotate(35deg)}.mark:before{top:14px}.mark:after{top:23px;transform:rotate(-35deg)}.brand small{display:block;font-size:9px;letter-spacing:.2em;color:var(--gold);margin-top:-3px}.links{display:flex;gap:28px;font-size:14px}.links a:hover{color:var(--gold)}.menu{display:none}
+.hero{min-height:780px;padding-top:76px;display:grid;place-items:center;position:relative;overflow:hidden;background:radial-gradient(circle at 78% 30%,#fff 0,#fbf8f3 42%,#f2e8df 100%)}
+.hero:after{content:"";position:absolute;width:540px;height:540px;border-radius:50%;right:-170px;top:130px;border:1px solid rgba(199,161,90,.28);box-shadow:0 0 0 55px rgba(199,161,90,.035),0 0 0 110px rgba(75,23,38,.025)}
+.heroGrid{display:grid;grid-template-columns:1.08fr .92fr;gap:70px;align-items:center;position:relative;z-index:2}.eyebrow{color:var(--gold);font-size:13px;font-weight:800;letter-spacing:.22em}.hero h1{font-family:Georgia,serif;color:var(--wine);font-size:clamp(52px,8vw,92px);line-height:.95;margin:18px 0 20px;letter-spacing:-.04em}.hero h2{font-size:clamp(20px,2.4vw,30px);margin:0 0 18px;letter-spacing:.03em}.hero p{max-width:650px;color:var(--muted);font-size:17px}.cta{display:flex;gap:12px;margin-top:32px;flex-wrap:wrap}.btn{padding:14px 22px;border-radius:999px;border:1px solid var(--wine);font-weight:800;font-size:14px}.btn.primary{background:var(--wine);color:#fff}.btn.gold{border-color:var(--gold);color:var(--wine);background:#fffaf0}.heroCard{background:rgba(255,255,255,.72);border:1px solid var(--line);border-radius:28px;padding:34px;box-shadow:0 24px 70px rgba(75,23,38,.10)}.heroCard .mini{font-size:12px;color:var(--gold);letter-spacing:.18em;font-weight:800}.heroCard h3{font-family:Georgia,serif;color:var(--wine);font-size:34px;margin:12px 0}.flow{display:grid;gap:12px;margin-top:22px}.flow div{padding:16px 18px;background:#fff;border-radius:16px;border:1px solid var(--line);display:flex;justify-content:space-between}.flow b{color:var(--wine)}section{padding:110px 0}.sectionHead{margin-bottom:42px}.sectionHead .kicker{font-size:12px;color:var(--gold);letter-spacing:.18em;font-weight:800}.sectionHead h2{font-family:Georgia,serif;color:var(--wine);font-size:44px;line-height:1.1;margin:10px 0}.sectionHead p{color:var(--muted);max-width:720px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:30px;transition:.25s}.card:hover{transform:translateY(-4px);box-shadow:0 18px 50px rgba(75,23,38,.09)}.num{font-family:Georgia,serif;color:var(--gold);font-size:14px}.card h3{color:var(--wine);font-size:21px;margin:12px 0 8px}.card p{color:var(--muted);font-size:14px;margin:0}.band{background:var(--wine);color:#fff}.band .sectionHead h2,.band .sectionHead p{color:#fff}.brandGrid{display:grid;grid-template-columns:1fr 1fr;gap:22px}.brandCard{min-height:360px;border-radius:26px;overflow:hidden;position:relative;background:linear-gradient(145deg,#fff 0,#f0e2d8 100%);border:1px solid var(--line);padding:34px;display:flex;flex-direction:column;justify-content:flex-end}.brandCard.star{background:linear-gradient(145deg,#fff9ef,#e9d2bc)}.brandCard.street{background:linear-gradient(145deg,#fff,#eadfce)}.brandCard .tag{position:absolute;top:28px;left:30px;color:var(--gold);font-size:11px;letter-spacing:.16em;font-weight:800}.brandCard h3{font-family:Georgia,serif;font-size:40px;color:var(--wine);margin:0}.brandCard p{color:var(--muted);max-width:430px}.brandCard .link{font-weight:800;color:var(--wine);margin-top:10px}.noImage{position:absolute;right:30px;top:75px;font-family:Georgia,serif;font-size:90px;color:rgba(75,23,38,.06)}.menuGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.menuItem{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px}.menuItem b{color:var(--wine)}.menuItem span{display:block;color:var(--muted);font-size:13px;margin-top:3px}.priceNote{margin-top:22px;padding:20px;border-left:3px solid var(--gold);background:#fff;color:var(--muted);font-size:13px}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.step{background:#fff;border:1px solid var(--line);padding:25px;border-radius:18px}.step strong{display:block;color:var(--gold);font-size:12px;letter-spacing:.15em}.step h3{color:var(--wine);margin:9px 0}.contact{display:grid;grid-template-columns:.8fr 1.2fr;gap:40px}.contactBox{background:#fff;border:1px solid var(--line);border-radius:24px;padding:34px}.contactBox h3{color:var(--wine);font-size:24px;margin-top:0}.field{margin-bottom:14px}.field label{display:block;font-size:12px;font-weight:800;margin-bottom:6px;color:var(--wine)}input,textarea{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;font:inherit}textarea{min-height:130px;resize:vertical}.notice{font-size:12px;color:var(--muted);margin-top:12px}footer{background:#241117;color:#d8cfd1;padding:45px 0}.foot{display:flex;justify-content:space-between;gap:30px;align-items:flex-end}.foot strong{color:#fff;font-size:20px}.foot small{display:block;color:#aa9da1;margin-top:8px}.top{position:fixed;right:22px;bottom:22px;width:46px;height:46px;border-radius:50%;background:var(--gold);color:var(--wine);display:grid;place-items:center;font-weight:900;box-shadow:0 8px 24px rgba(0,0,0,.15);z-index:40}
+@media(max-width:850px){.links{display:none}.menu{display:block;border:0;background:none;font-size:26px;color:var(--wine)}.hero{min-height:auto;padding:135px 0 80px}.heroGrid{grid-template-columns:1fr;gap:30px}.grid3,.menuGrid{grid-template-columns:1fr}.brandGrid,.contact{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}.hero:after{right:-320px}.sectionHead h2{font-size:36px}.foot{flex-direction:column;align-items:flex-start}}
+@media(max-width:520px){.wrap{padding:0 18px}.nav{height:68px}.mark{width:36px;height:36px}.hero h1{font-size:55px}.hero h2{font-size:19px}.steps{grid-template-columns:1fr}.brandCard{min-height:300px}.brandCard h3{font-size:34px}}
+</style>
+</head>
+<body>
+<header><div class="wrap nav">
+<a class="brand" href="#home" aria-label="매치온 홈"><span class="mark"></span><span>MATCHON<small>FRANCHISE MATCHING & PARTNERSHIP</small></span></a>
+<nav class="links">
+<a href="#about">ABOUT</a><a href="#business">BUSINESS</a><a href="#brands">BRANDS</a><a href="#startup">START-UP</a><a href="#contact">CONTACT</a>
+</nav><button class="menu" onclick="document.querySelector('.links').style.display='flex'">☰</button>
+</div></header>
+
+<main id="home">
+<section class="hero"><div class="wrap heroGrid">
+<div><div class="eyebrow">FRANCHISE MATCHING & PARTNERSHIP</div><h1>MATCH<br>ON</h1><h2>좋은 브랜드와 좋은 파트너를 연결합니다.</h2><p>매치온은 프랜차이즈 본사와 예비창업자, 점포와 브랜드, 운영 파트너를 연결해 실제 사업으로 이어지는 매칭을 만듭니다.</p>
+<div class="cta"><a class="btn primary" href="#contact">가맹·사업 상담</a><a class="btn gold" href="#brands">브랜드 살펴보기</a></div></div>
+<div class="heroCard"><div class="mini">MATCHON SYSTEM</div><h3>브랜드와 사람,<br>사업을 연결하는 구조</h3><div class="flow"><div><b>FRANCHISE HQ</b><span>브랜드</span></div><div><b>MATCHON</b><span>매칭·운영</span></div><div><b>PARTNER</b><span>가맹·점포·협력사</span></div></div></div>
+</div></section>
+
+<section id="about"><div class="wrap"><div class="sectionHead"><div class="kicker">ABOUT MATCHON</div><h2>매칭을 넘어,<br>사업의 시작을 연결합니다.</h2><p>매치온은 브랜드의 확장과 예비창업자의 선택이 실제 매장과 지속적인 파트너십으로 이어질 수 있도록 브랜드·상권·점포·사람을 연결하는 실무형 플랫폼을 지향합니다.</p></div>
+<div class="grid3">
+<div class="card"><div class="num">01</div><h3>브랜드 매칭</h3><p>브랜드의 콘셉트와 운영모델을 기준으로 적합한 가맹 파트너와 접점을 만듭니다.</p></div>
+<div class="card"><div class="num">02</div><h3>상권·점포 연결</h3><p>업종과 매장 형태, 상권 특성을 함께 검토해 브랜드와 점포의 연결 가능성을 높입니다.</p></div>
+<div class="card"><div class="num">03</div><h3>파트너십</h3><p>물류·인테리어·식자재 등 사업 운영에 필요한 협력 네트워크를 연결합니다.</p></div>
+</div></div></section>
+
+<section id="business" class="band"><div class="wrap"><div class="sectionHead"><div class="kicker">BUSINESS</div><h2>매치온이 연결하는 것</h2><p>프랜차이즈 사업의 여러 접점을 하나의 흐름으로 연결합니다.</p></div>
+<div class="grid3">
+<div class="card"><div class="num">A</div><h3>가맹본사</h3><p>가맹점 모집, 브랜드 확장, 지역 파트너 발굴 및 실무 지원.</p></div>
+<div class="card"><div class="num">B</div><h3>예비창업자</h3><p>브랜드 정보, 매장 형태, 창업 조건을 바탕으로 상담과 매칭을 지원.</p></div>
+<div class="card"><div class="num">C</div><h3>협력 파트너</h3><p>점포·인테리어·물류·식자재 등 운영에 필요한 사업 파트너 연결.</p></div>
+</div></div></section>
+
+<section id="brands"><div class="wrap"><div class="sectionHead"><div class="kicker">FRANCHISE BRANDS</div><h2>매치온 브랜드</h2><p>현재 운영·제휴 브랜드와 향후 매칭할 신규 브랜드를 소개합니다.</p></div>
+<div class="brandGrid">
+<article class="brandCard star"><div class="tag">K-NOODLE FRANCHISE</div><div class="noImage">★</div><h3>별국수</h3><p>상권에 맞추고, 매장에 맞춰 성장하는 유연한 K-누들 외식 브랜드. 면류를 중심으로 분식·밥류·사이드 메뉴를 조합할 수 있는 구조입니다.</p><a class="link" href="#byeol">별국수 상세보기 →</a></article>
+<article class="brandCard street"><div class="tag">FRANCHISE BRAND</div><div class="noImage">M</div><h3>별스트리트</h3><p>가성비와 접근성을 강조한 외식 브랜드 라인업으로, 상권과 매장 형태에 맞는 운영모델을 검토합니다.</p><a class="link" href="#contact">입점·가맹 상담 →</a></article>
+</div></div></section>
+
+<section id="byeol" style="padding-top:50px"><div class="wrap"><div class="sectionHead"><div class="kicker">BYEOL GUKSU</div><h2>별국수 브랜드 정보</h2><p>별국수의 핵심 메뉴와 가맹 안내 자료를 매치온 상담의 기본 정보로 활용할 수 있습니다.</p></div>
+<div class="menuGrid">
+<div class="menuItem"><b>별소면</b><span>대표 면류</span></div><div class="menuItem"><b>고기별소면</b><span>면류</span></div><div class="menuItem"><b>어묵별국수</b><span>면류</span></div>
+<div class="menuItem"><b>얼큰어묵별국수</b><span>면류</span></div><div class="menuItem"><b>비빔별국수</b><span>면류</span></div><div class="menuItem"><b>비빔고기별국수</b><span>면류</span></div>
+<div class="menuItem"><b>콩국수</b><span>계절 메뉴</span></div><div class="menuItem"><b>별짜장 · 고기별짜장</b><span>중식 메뉴</span></div><div class="menuItem"><b>고기별짬뽕</b><span>중식 메뉴</span></div>
+<div class="menuItem"><b>꼬마김밥 · 떡볶이</b><span>분식</span></div><div class="menuItem"><b>왕만두 · 모듬튀김</b><span>사이드</span></div><div class="menuItem"><b>규동 · 덮밥 · 컵밥</b><span>밥류</span></div>
+</div>
+<div class="priceNote"><strong>가맹 상담 참고</strong><br>기존 안내자료 기준 가맹비 500만원, 교육비 300만원, 보증금 300만원, 주방설비 1,500만원부터, 인테리어 180만원/평부터, 로열티 매출의 2%(부가세 별도) 등의 조건이 제시되어 있습니다. 실제 계약·견적·조건은 본사 확인 및 현장 조건에 따라 달라질 수 있으므로 상담 시 최신 자료를 확인합니다.</div>
+</div></section>
+
+<section id="startup" style="background:#f0e7df"><div class="wrap"><div class="sectionHead"><div class="kicker">START-UP</div><h2>창업 상담 프로세스</h2><p>상담에서 매칭, 검토, 계약까지 단계별로 진행합니다.</p></div>
+<div class="steps"><div class="step"><strong>STEP 01</strong><h3>상담</h3><p>희망 업종·지역·예산·점포 조건을 확인합니다.</p></div><div class="step"><strong>STEP 02</strong><h3>브랜드 매칭</h3><p>조건에 맞는 브랜드와 사업모델을 검토합니다.</p></div><div class="step"><strong>STEP 03</strong><h3>상권·현장 검토</h3><p>매장 조건과 예상 운영 가능성을 함께 확인합니다.</p></div><div class="step"><strong>STEP 04</strong><h3>가맹·오픈 준비</h3><p>계약 이후 교육·공사·물류 등 오픈 절차를 연결합니다.</p></div></div></div></section>
+
+<section id="contact"><div class="wrap"><div class="sectionHead"><div class="kicker">CONTACT MATCHON</div><h2>함께할 준비가 되셨다면<br>매치온에 문의하세요.</h2><p>가맹본사, 예비창업자, 점포·협력 파트너 모두 상담할 수 있습니다.</p></div>
+<div class="contact"><div class="contactBox"><h3>상담 분야</h3><p>• 프랜차이즈 가맹 상담<br>• 브랜드 제휴<br>• 가맹점 모집 대행<br>• 점포·상권 상담<br>• 협력사 제휴<br>• 신규 브랜드 입점 상담</p><p class="notice">※ 아래 문의폼은 현재 정적 홈페이지용 화면입니다. 실제 접수 기능은 이메일·Google Forms·카카오톡 등 연결 후 활성화할 수 있습니다.</p></div>
+<form class="contactBox" onsubmit="event.preventDefault();alert('문의폼 연결 전 데모입니다. 실제 운영 시 이메일/폼 서비스를 연결해 주세요.');"><div class="field"><label>성함 / 업체명</label><input required placeholder="성함 또는 업체명"></div><div class="field"><label>연락처</label><input required placeholder="010-0000-0000"></div><div class="field"><label>문의내용</label><textarea required placeholder="상담 내용을 입력해주세요."></textarea></div><button class="btn primary" type="submit">상담 문의 보내기</button></form></div></div></section>
+</main>
+<a class="top" href="#home" aria-label="위로">↑</a>
+<footer><div class="wrap foot"><div><strong>MATCHON</strong><small>FRANCHISE MATCHING & PARTNERSHIP</small></div><div><small>좋은 브랜드와 좋은 파트너를 연결합니다.</small><small>© MATCHON. All rights reserved.</small></div></div></footer>
+</body>
+</html>
