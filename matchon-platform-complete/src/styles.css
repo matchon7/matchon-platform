@@ -27,7 +27,7 @@
 
   --matchon-max: 1240px;
   --matchon-gutter: 24px;
-  --header-height: 78px;
+  --header-height: 92px;
 }
 
 /* =========================================================
@@ -164,9 +164,17 @@ footer {
   display: inline-flex;
   align-items: center;
 
-  gap: 12px;
+  gap: 0;
 
   flex: 0 0 auto;
+}
+
+.matchon-brand-logo {
+  display: block;
+  width: 112px;
+  height: auto;
+  border-radius: 5px;
+  object-fit: contain;
 }
 
 .logo-mark {
@@ -944,30 +952,28 @@ p {
   display: grid;
 
   grid-template-columns:
-    repeat(4, minmax(0, 1fr));
+    repeat(2, minmax(0, 1fr));
 
-  gap: 0;
+  gap: 18px;
 
   margin-top: 56px;
-
-  border-top:
-    1px solid rgba(212, 175, 55, 0.32);
 }
 
 .business-grid article {
-  min-height: 260px;
-
-  padding: 30px 28px;
-
-  border-right:
-    1px solid rgba(212, 175, 55, 0.24);
-
-  border-bottom:
-    1px solid rgba(212, 175, 55, 0.24);
+  min-height: 330px;
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  border: 1px solid rgba(212, 175, 55, 0.24);
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(255,255,255,.055), rgba(255,255,255,.018));
+  transition: border-color .2s ease, transform .2s ease, background .2s ease;
 }
 
-.business-grid article:last-child {
-  border-right: 0;
+.business-grid article:hover {
+  transform: translateY(-3px);
+  border-color: rgba(240, 216, 117, 0.62);
+  background: linear-gradient(145deg, rgba(255,255,255,.085), rgba(255,255,255,.028));
 }
 
 .business-grid article > span {
@@ -980,8 +986,16 @@ p {
   letter-spacing: 0.08em;
 }
 
+.business-grid article > small {
+  margin-top: 8px;
+  color: rgba(240, 216, 117, 0.72);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .16em;
+}
+
 .business-grid h3 {
-  margin: 52px 0 14px;
+  margin: 22px 0 12px;
 
   color: #ffffff;
 
@@ -993,7 +1007,7 @@ p {
 }
 
 .business-grid p {
-  margin: 0;
+  margin: 0 0 20px;
 
   color:
     rgba(255, 255, 255, 0.68);
@@ -1001,6 +1015,51 @@ p {
   line-height: 1.8;
 
   letter-spacing: -0.025em;
+}
+
+.business-intro {
+  max-width: 790px;
+  margin: 22px 0 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+.business-details {
+  margin-top: auto;
+  padding: 14px 0;
+  border-top: 1px solid rgba(255,255,255,.14);
+  color: rgba(255,255,255,.5);
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+.business-details b {
+  display: block;
+  margin-top: 3px;
+  color: var(--matchon-gold-light);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.business-grid article button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid rgba(240,216,117,.35);
+  border-radius: 8px;
+  background: transparent;
+  color: #f5e4a0;
+  font-size: 11px;
+  font-weight: 800;
+  text-align: left;
+  cursor: pointer;
+}
+
+.business-grid article button:hover {
+  background: rgba(240,216,117,.12);
 }
 
 /* =========================================================
@@ -1342,6 +1401,17 @@ p {
   letter-spacing: 0.02em;
 }
 
+.contact-email {
+  display: inline-block;
+  margin-top: 28px;
+  color: var(--matchon-gold-light);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
 /* =========================================================
    CONTACT FORM
    ========================================================= */
@@ -1379,6 +1449,14 @@ p {
   font-weight: 900;
 
   letter-spacing: -0.01em;
+}
+
+.contact-form .contact-honeypot {
+  position: absolute !important;
+  left: -10000px !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
 
 .contact-form input,
@@ -1500,7 +1578,11 @@ p {
 
   align-items: center;
 
-  gap: 12px;
+  gap: 0;
+}
+
+.footer-brand-logo {
+  width: 132px;
 }
 
 .footer-logo {
@@ -1690,7 +1772,7 @@ p {
 @media (max-width: 820px) {
 
   :root {
-    --header-height: 68px;
+    --header-height: 74px;
     --matchon-gutter: 18px;
   }
 
@@ -1816,14 +1898,7 @@ p {
     margin-top: 32px;
   }
 
-  .business-grid {
-    grid-template-columns:
-      1fr 1fr;
-  }
-
-  .business-grid article {
-    min-height: 230px;
-  }
+  .business-grid article { min-height: 330px; }
 
   .brand-grid {
     grid-template-columns:
@@ -1875,19 +1950,9 @@ p {
       );
   }
 
-  .logo-mark {
-    width: 40px;
-    height: 40px;
-  }
-
-  .logo-mark .matchon-symbol {
-    width: 31px;
-    height: 31px;
-  }
-
-  .logo-text strong {
-    font-size: 15px;
-  }
+  :root { --header-height: 68px; }
+  .matchon-brand-logo { width: 80px; }
+  .footer-brand-logo { width: 118px; }
 
   .hero-inner {
     padding-top: 54px;
@@ -1971,12 +2036,11 @@ p {
 
   .business-grid article {
     min-height: auto;
-
-    border-right: 0 !important;
+    padding: 24px;
   }
 
   .business-grid h3 {
-    margin-top: 34px;
+    margin-top: 18px;
   }
 
   .brand-card {
@@ -2022,4 +2086,44 @@ p {
   .footer-copy {
     width: 100%;
   }
+}
+
+/* Official MATCHON brand logo and consultation cards */
+.hero-logo {
+  width: min(78%, 220px);
+  height: auto;
+  aspect-ratio: 447 / 369;
+  overflow: hidden;
+  border: 1px solid rgba(240, 216, 117, .42);
+  border-radius: 10px;
+  background: #160e0d;
+}
+
+.hero-logo img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.hero-card > p {
+  max-width: 270px;
+  letter-spacing: .03em;
+  line-height: 1.8;
+}
+
+.business-grid article { min-height: 355px; }
+
+.business-section .eyebrow { margin-bottom: 14px; }
+
+@media (max-width: 820px) {
+  :root { --header-height: 74px; }
+  .matchon-brand-logo { width: 90px; }
+  .business-grid article { min-height: 340px; }
+}
+
+@media (max-width: 560px) {
+  :root { --header-height: 68px; }
+  .matchon-brand-logo { width: 80px; }
+  .business-grid article { min-height: auto; }
+  .hero-logo { width: min(70%, 200px); }
 }

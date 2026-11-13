@@ -1,9 +1,54 @@
 import React, { useState } from "react";
 import ByeolGuksu from "./pages/ByeolGuksu";
 
-const CONSULTATION_ENDPOINT = "";
-
 const EMAIL = "matchon7@daum.net";
+const CONSULTATION_ENDPOINT = `https://formsubmit.co/ajax/${EMAIL}`;
+
+const consultationTypes = [
+  "가맹본사 · 브랜드 확장",
+  "예비창업 · 가맹 상담",
+  "점포 · 상권 매칭",
+  "사업 파트너 · 제휴 상담",
+];
+
+const businessAreas = [
+  {
+    no: "01",
+    label: "BRAND OWNER",
+    title: "가맹본사",
+    type: consultationTypes[0],
+    description:
+      "브랜드의 확장 목표와 현재 준비 상황을 바탕으로 가맹 희망자 발굴, 지역 파트너 연결, 상담 흐름 정리 등 필요한 협업 범위를 함께 살펴봅니다.",
+    details: "희망 권역 · 모집 방식 · 본사 지원 범위",
+  },
+  {
+    no: "02",
+    label: "FUTURE FOUNDER",
+    title: "예비창업자",
+    type: consultationTypes[1],
+    description:
+      "관심 브랜드와 업종, 희망 지역, 투자 범위, 창업 시기를 확인해 검토 가능한 선택지를 안내합니다. 계약 전에는 각 브랜드의 최신 공식 자료와 조건을 확인하도록 돕습니다.",
+    details: "관심 브랜드 · 지역 · 투자 범위 · 희망 시기",
+  },
+  {
+    no: "03",
+    label: "STORE & AREA",
+    title: "점포·상권 보유자",
+    type: consultationTypes[2],
+    description:
+      "점포 주소와 면적, 임대·매매 조건, 주변 업종과 시설 상태를 바탕으로 적합한 브랜드와 매칭 가능성을 검토합니다. 필요하면 현장 확인에 필요한 항목도 함께 정리합니다.",
+    details: "소재지 · 면적 · 거래 조건 · 시설 현황",
+  },
+  {
+    no: "04",
+    label: "BUSINESS PARTNER",
+    title: "사업 협력 파트너",
+    type: consultationTypes[3],
+    description:
+      "인테리어·시공·설비·물류·식자재·기술·마케팅 등 외식사업에 필요한 제안을 검토합니다. 제공 지역과 역량, 협력 방식, 수행 사례를 바탕으로 접점을 찾습니다.",
+    details: "협력 분야 · 제공 지역 · 수행 역량 · 제안 방식",
+  },
+];
 
 const brands = [
   {
@@ -110,6 +155,12 @@ function Home() {
   const [open, setOpen] = useState(false);
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
+  const [consultationType, setConsultationType] = useState("");
+
+  function startConsultation(type) {
+    setConsultationType(type);
+    scrollToSection("contact");
+  }
 
   async function submit(e) {
     e.preventDefault();
@@ -117,44 +168,43 @@ function Home() {
     const form = e.currentTarget;
     const data = Object.fromEntries(new FormData(form).entries());
 
-    if (!data.name || !data.phone || !data.region) {
-      alert("성명, 연락처, 희망지역을 입력해주세요.");
+    if (!data.name || !data.phone || !data.region || !data.consultationType) {
+      alert("상담 분야, 성명, 연락처, 지역을 입력해주세요.");
       return;
     }
 
     setSending(true);
 
     const payload = {
-      type: "MATCHON_MAIN",
-      submittedAt: new Date().toISOString(),
       ...data,
+      _subject: `[매치온 상담] ${data.consultationType} · ${data.company || data.name}`,
+      _template: "table",
+      _replyto: data.email || undefined,
+      _url: window.location.href,
+      _honey: data.website || "",
     };
+    delete payload.website;
 
     try {
-      if (CONSULTATION_ENDPOINT) {
-        await fetch(CONSULTATION_ENDPOINT, {
-          method: "POST",
-          mode: "no-cors",
-          headers: {
-            "Content-Type":
-              "application/x-www-form-urlencoded;charset=UTF-8",
-          },
-          body: new URLSearchParams({
-            payload: JSON.stringify(payload),
-          }),
-        });
-      } else {
-        localStorage.setItem(
-          "matchon_last_inquiry",
-          JSON.stringify(payload)
-        );
+      const response = await fetch(CONSULTATION_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json();
+      if (!response.ok || result.success === false) {
+        throw new Error(result.message || "상담 접수에 실패했습니다.");
       }
 
       form.reset();
+      setConsultationType("");
       setSent(true);
     } catch (error) {
       console.error(error);
-      alert("상담 신청 중 오류가 발생했습니다.");
+      alert("상담을 전달하지 못했습니다. 잠시 후 다시 시도하거나 matchon7@daum.net으로 문의해 주세요.");
     } finally {
       setSending(false);
     }
@@ -175,17 +225,11 @@ function Home() {
         <div className="header-inner">
 
           <a href="/" className="logo">
-            <span className="logo-mark">
-              <MatchonMark />
-            </span>
-
-            <span className="logo-text">
-              <strong>
-                MATCH<span>ON</span>
-              </strong>
-
-              <small>매치온</small>
-            </span>
+            <img
+              className="matchon-brand-logo"
+              src="/images/matchon-logo.jpg"
+              alt="MATCHON 매치온 프랜차이즈 매칭 & 파트너십"
+            />
           </a>
 
           <button
@@ -307,23 +351,11 @@ function Home() {
               <div className="hero-card">
 
                 <div className="hero-logo">
-                  <MatchonMark />
+                  <img src="/images/matchon-logo.jpg" alt="MATCHON 매치온" />
                 </div>
-
-                <div className="hero-wordmark">
-                  <strong>
-                    MATCH<span>ON</span>
-                  </strong>
-
-                  <small>매치온</small>
-                </div>
-
-                <div className="hero-line" />
 
                 <p>
-                  FRANCHISE MATCHING
-                  <br />
-                  & PARTNERSHIP
+                  브랜드 본사와 창업자, 점포와 사업 파트너를 잇는 실무형 매칭
                 </p>
 
               </div>
@@ -419,64 +451,29 @@ function Home() {
             </p>
 
             <h2>
-              매칭에서 시작해
+              매치온이 연결하는
               <br />
-              운영까지 연결합니다.
+              네 가지 사업 기회
             </h2>
 
+            <p className="business-intro">
+              가맹본사·예비창업자·점포 보유자·사업 파트너의 서로 다른 목표와 조건을 확인하고,
+              필요한 상담 항목을 분야별로 나누어 구체적인 다음 단계를 함께 검토합니다.
+            </p>
+
             <div className="business-grid">
-
-              <article>
-                <span>01</span>
-
-                <h3>
-                  프랜차이즈 사업
-                </h3>
-
-                <p>
-                  외식 브랜드의 가맹사업 기획과 운영,
-                  가맹점 모집을 지원합니다.
-                </p>
-              </article>
-
-              <article>
-                <span>02</span>
-
-                <h3>
-                  브랜드 파트너십
-                </h3>
-
-                <p>
-                  브랜드와 사업자 사이의 협력 기회를
-                  발굴하고 연결합니다.
-                </p>
-              </article>
-
-              <article>
-                <span>03</span>
-
-                <h3>
-                  상권 맞춤형 모델
-                </h3>
-
-                <p>
-                  상권과 점포 조건에 따라 메뉴와
-                  운영모델을 유연하게 설계합니다.
-                </p>
-              </article>
-
-              <article>
-                <span>04</span>
-
-                <h3>
-                  창업 컨설팅
-                </h3>
-
-                <p>
-                  투자금액과 희망지역을 기준으로
-                  적합한 창업모델을 함께 검토합니다.
-                </p>
-              </article>
+              {businessAreas.map((area) => (
+                <article key={area.no}>
+                  <span>{area.no}</span>
+                  <small>{area.label}</small>
+                  <h3>{area.title}</h3>
+                  <p>{area.description}</p>
+                  <div className="business-details">상담 시 함께 확인 <b>{area.details}</b></div>
+                  <button type="button" onClick={() => startConsultation(area.type)}>
+                    {area.type} <span aria-hidden="true">↗</span>
+                  </button>
+                </article>
+              ))}
 
             </div>
           </div>
@@ -624,14 +621,13 @@ function Home() {
               </h2>
 
               <p>
-                관심 브랜드와 희망 지역,
-                투자 가능 범위를 알려주시면
-                매치온에서 검토 후 연락드리겠습니다.
+                상담 분야와 현재 상황, 희망 지역 및 협력 목표를 남겨주시면
+                내용을 확인한 뒤 매치온에서 연락드리겠습니다.
               </p>
 
-              <strong>
+              <a href={`mailto:${EMAIL}`} className="contact-email">
                 {EMAIL}
-              </strong>
+              </a>
 
             </div>
 
@@ -640,20 +636,31 @@ function Home() {
               className="contact-form"
             >
 
-              <label>
-                관심 브랜드
+              <label className="contact-honeypot" aria-hidden="true">
+                Website
+                <input name="website" type="text" tabIndex={-1} autoComplete="off" />
+              </label>
 
-                <select name="brand">
-                  <option>별국수</option>
-                  <option>별스트리트</option>
-                  <option>별그릴</option>
-                  <option>그로타피맥</option>
-                  <option>기타 상담</option>
+              <label>
+                상담 분야 *
+                <select
+                  name="consultationType"
+                  required
+                  value={consultationType}
+                  onChange={(e) => setConsultationType(e.target.value)}
+                >
+                  <option value="">상담 분야를 선택해 주세요</option>
+                  {consultationTypes.map((type) => <option key={type}>{type}</option>)}
                 </select>
               </label>
 
               <label>
-                성명 / 업체명 *
+                관심 브랜드 / 제안 분야
+                <input name="interest" type="text" placeholder="예: 별국수, 서울 강남 점포, 식자재 물류 제휴" />
+              </label>
+
+              <label>
+                성명 *
 
                 <input
                   name="name"
@@ -661,6 +668,11 @@ function Home() {
                   required
                   placeholder="성명 또는 업체명을 입력해주세요"
                 />
+              </label>
+
+              <label>
+                회사·브랜드명
+                <input name="company" type="text" placeholder="업체 또는 브랜드명 (개인은 생략 가능)" />
               </label>
 
               <label>
@@ -675,26 +687,25 @@ function Home() {
               </label>
 
               <label>
-                희망 출점지역 *
+                회신 이메일
+                <input name="email" type="email" placeholder="회신받을 이메일 (선택)" />
+              </label>
+
+              <label>
+                주요 활동 지역 / 희망 지역 *
 
                 <input
                   name="region"
                   type="text"
                   required
-                  placeholder="예: 서울 강남구"
+                  placeholder="예: 서울 전역 / 매장 소재지 / 담당 권역"
                 />
               </label>
 
               <label>
-                투자 가능 범위
+                사업 규모 / 투자 범위
 
-                <select name="budget">
-                  <option>5,000만원 이하</option>
-                  <option>5,000~7,000만원</option>
-                  <option>7,000만원~1억원</option>
-                  <option>1억원 이상</option>
-                  <option>상담 필요</option>
-                </select>
+                <input name="scope" type="text" placeholder="점포 면적, 투자 범위, 협력 규모 등" />
               </label>
 
               <label>
@@ -703,7 +714,7 @@ function Home() {
                 <textarea
                   name="message"
                   rows="5"
-                  placeholder="문의하실 내용을 입력해주세요"
+                  placeholder="희망하는 협력 내용, 현재 준비 상황, 희망 일정 등 상담에 필요한 내용을 적어주세요"
                 />
               </label>
 
@@ -711,12 +722,13 @@ function Home() {
 
                 <input
                   type="checkbox"
+                  name="privacyConsent"
+                  value="동의"
                   required
                 />
 
                 <span>
-                  가맹상담을 위한 개인정보 수집·이용에
-                  동의합니다.
+                  상담 회신을 위해 입력한 성명, 업체명, 연락처, 이메일, 지역 및 문의 내용을 수집하고 이메일 전달 서비스(FormSubmit.co)를 통해 매치온에 전달하는 데 동의합니다.
                 </span>
 
               </label>
@@ -733,7 +745,7 @@ function Home() {
 
               {sent && (
                 <p className="success-message">
-                  상담 신청이 접수되었습니다.
+                  상담 내용이 이메일로 전달되었습니다. 확인 후 연락드리겠습니다.
                 </p>
               )}
 
@@ -751,23 +763,9 @@ function Home() {
 
       <footer className="footer">
 
-        <div className="footer-brand">
-
-          <div className="footer-logo">
-            <MatchonMark />
-          </div>
-
-          <div>
-            <strong>
-              MATCH<span>ON</span>
-            </strong>
-
-            <small>
-              매치온
-            </small>
-          </div>
-
-        </div>
+        <a className="footer-brand" href="/" aria-label="매치온 홈페이지">
+          <img className="matchon-brand-logo footer-brand-logo" src="/images/matchon-logo.jpg" alt="MATCHON 매치온 프랜차이즈 매칭 & 파트너십" />
+        </a>
 
         <div className="footer-copy">
 
